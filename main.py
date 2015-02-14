@@ -1,7 +1,6 @@
 # KMCLib application for diffusion of vacancies in pure bcc Fe material.
-# Author = Thomas Davis
-# email = txd283@bham.ac.uk
-# University of Birmingham
+# Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
+
 
 from KMCLib import *
 from customRates import *
@@ -9,7 +8,7 @@ import numpy
 import os
 
 # add configuration and interactions from files
-configuration = KMCConfigurationFromScript("configuration.py")
+configuration = KMCConfigurationFromScript("config.py")
 interactions = KMCInteractionsFromScript("processes.py")
 
 # Set the rate calculator which includes vacancy clustering
@@ -26,8 +25,8 @@ msd_analysis = OnTheFlyMSD(history_steps=1000,
                            track_type="V")                        
                         
 # seed=None uses wall-clock time
-control_parameters = KMCControlParameters(number_of_steps=10000000,
-                                          dump_interval=10000,
+control_parameters = KMCControlParameters(number_of_steps=100000,
+                                          dump_interval=1000,
                                           analysis_interval=100,
                                           seed=None)              
 
@@ -42,7 +41,7 @@ with open('results/MSD.data', 'w') as f:
     msd_analysis.printResults(f)     
 
 
-lines_per_file = 2013
+lines_per_file = 6763
 number = 0
 smallfile = 0
 with open('results/all.cfg') as bigfile:

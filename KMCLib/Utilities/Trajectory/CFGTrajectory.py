@@ -1,12 +1,4 @@
-""" Module for the XYZTrajectory object """
-
-
-# Copyright (c)  2013  Mikael Leetmaa
-#
-# This file is part of the KMCLib project distributed under the terms of the
-# GNU General Public License version 3, see <http://www.gnu.org/licenses/>.
-#
-
+# Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
 import sys
 import time
@@ -76,7 +68,7 @@ class CFGTrajectory(Trajectory):
         Calculate and return the buffer size.
         """
         size =  sys.getsizeof(self.__atom_id_coordinates)
-        size +=  sys.getsizeof(self.__atom_id_coordinates[0])*len(self.__atom_id_coordinates)
+        size += sys.getsizeof(self.__atom_id_coordinates[0])*len(self.__atom_id_coordinates)
         size += sys.getsizeof(self.__atom_id_types)
         size += sys.getsizeof(self.__atom_id_types[0])*len(self.__atom_id_types)
         size += sys.getsizeof(self.__time)
@@ -102,12 +94,12 @@ class CFGTrajectory(Trajectory):
                         n_atoms = len(self.__atom_id_types[i])
                         
                         # calculate the super-cell length
-                        repetitions = 10.0
+                        repetitions = 15.0
                         H = 2.87 * repetitions
                         
                         #supercell headers for CFG file for atomeye
-                        trajectory.write("Number of particles = 2000\n\n")
-                        trajectory.write("A = 1.1 Angstrom\n")
+                        trajectory.write("Number of particles = %i\n\n"%(n_atoms))
+                        trajectory.write("A = 10 Angstrom\n")
                         trajectory.write("H0(1,1) = %f A\n"%(H))
                         trajectory.write("H0(1,2) = 0 . 0 A\n")  
                         trajectory.write("H0(1,3) = 0 . 0 A\n") 
@@ -124,9 +116,9 @@ class CFGTrajectory(Trajectory):
                             c = self.__atom_id_coordinates[i][j]
                             
                             #reduce the coordinates
-                            d = c[0]/H
-                            e = c[1]/H
-                            g = c[2]/H
+                            s1 = c[0]/H
+                            s2 = c[1]/H
+                            s3 = c[2]/H
                             
                             #change the mass atomic number depending on type of atoms there
                             if t == 'Fe':
@@ -136,7 +128,7 @@ class CFGTrajectory(Trajectory):
                                 mass = 1.0
                             
                             # write the cfg file with reduced coordinates
-                            trajectory.write("%f %s %f %f %f 0.0 0.0 0.0\n"%(mass, t, d, e, g))
+                            trajectory.write("%f %s %f %f %f 0.0 0.0 0.0\n"%(mass, t, s1, s2, s3))
                         
                         
             # While the other processes wait.

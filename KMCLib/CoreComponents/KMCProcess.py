@@ -128,7 +128,6 @@ class KMCProcess(object):
 
         # Check that they are not identical.
         
-        ####### EDITED BY ME
         if elements_before == elements_after:
             raise Error("The atomic configuration before and after a move can not be identical.")
 

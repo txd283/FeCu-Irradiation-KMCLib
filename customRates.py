@@ -1,4 +1,5 @@
 # here a custom rate is calculated for unique events in the simulation
+# Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
 from KMCLib import *
 import numpy
@@ -18,30 +19,27 @@ v_rate = 1.0
 
 class CustomRateCalculator(KMCRateCalculatorPlugin):
 
-    def rate(self, geometry, elements_before, elements_after, rate_constant, process_number, coordinate):
-        
+    def rate(self, geometry, types_before, types_after, rate_constant, process_number, coordinate):
 
         # For every vacancy, check the neighbours around it to see if they are V.
-        V_neighbours = len([ e for e in [elements_before[1], elements_before[2], elements_before[3], elements_before[4], elements_before[5],elements_before[6], elements_before[7], elements_before[8]] if e == "V"])
+        V_neighbours = len([ e for e in [types_before[1], types_before[2], types_before[3], types_before[4], types_before[5],types_before[6], types_before[7], types_before[8]] if e == "V"])
+                       
+        print("V_neighbours = %i \n"%(V_neighbours))
         
-        #Fe_neighbours = len([ e for e in [elements_before[1], elements_before[2], elements_before[3], elements_before[4], elements_before[5],elements_before[6], elements_before[7], elements_before[8]] if e == "Fe"])
-        
-        #V_neighbours = 1
-       
-        #print("V_neighbours = %i \n"%(V_neighbours))
-        #print("Fe_neighbours = %f \n"%(Fe_neighbours))
-        
-        #change the value of the activation energy with or without a binding energy of a V-V pair, or more.
-        
+        #change the value of the activation energy with or without a binding energy of a V-V pair, or more.        
         if V_neighbours >= 1:
             v_rate = v*math.exp(-(E_m + E_b)/(kT))
-            #print("v_rate = %.1f"%(v_rate))
+            print("v_rate = %.1f"%(v_rate))
             
         elif V_neighbours == 0:
             v_rate = rate
         
-        #print("v_rate = %f"%(v_rate))
         return v_rate
 
     def cutoff(self):
+
+        #To determine the radial cutoff of the geometry around the central lattice site to cut out and send down to the custom rate function.
+        #Restricts the custom rate to look in the primitive cell internal coordinates (float)
+
+        # is this number a fuction of a?
         return 1.0
