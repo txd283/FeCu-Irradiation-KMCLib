@@ -15,12 +15,12 @@ unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
                                       [0.5,0.5,0.5]])
 
 lattice = KMCLattice(unit_cell=unit_cell,
-                     repetitions=(10,10,10),
+                     repetitions=(4,4,4),
                      periodic=(True,True,True))
 
 
 # Types of atoms. There are total 2 atoms in a unit cell of bcc => 10x10x10 = 1,000 unit cells = 2000 atoms
-types = ["Fe"]*2000
+types = ["Fe"]*128
 
 # Swap parts of the array with vacancies, V.
 types[20] = "V"
