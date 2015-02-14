@@ -6,10 +6,8 @@
 from KMCLib import *
 import math
 
-rate = 1e13*math.exp(-0.55/(0.862e-4*560))
-
-#Check rate
-print(rate)
+# need to define a rate, but will be altered by the custom rate class
+rate = 1.0
 
 #if diffusion is sucessful, swap the atoms
 before_diff = ['V','Fe']

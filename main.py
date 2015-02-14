@@ -4,6 +4,7 @@
 # University of Birmingham
 
 from KMCLib import *
+from customRates import *
 import numpy
 import os
 
@@ -11,27 +12,28 @@ import os
 configuration = KMCConfigurationFromScript("configuration.py")
 interactions = KMCInteractionsFromScript("processes.py")
 
+# Set the rate calculator which includes vacancy clustering
+interactions.setRateCalculator(rate_calculator=CustomRateCalculator)
+
 # Generate the KMC model to run.
 model = KMCLatticeModel(configuration=configuration,
                         interactions=interactions)
 
 # enable MSD tracking                      
-msd_analysis = OnTheFlyMSD(history_steps=10,
-                           n_bins=10,
-                           t_max=10.0,
+msd_analysis = OnTheFlyMSD(history_steps=1000,
+                           n_bins=100,
+                           t_max=2500.0,
                            track_type="V")                        
                         
 # seed=None uses wall-clock time
-control_parameters = KMCControlParameters(number_of_steps=10,
-                                          dump_interval=1,
+control_parameters = KMCControlParameters(number_of_steps=10000000,
+                                          dump_interval=10000,
                                           analysis_interval=100,
                                           seed=None)              
 
 # Run the model and save the atom poisitons to file
 model.run(control_parameters=control_parameters,
           trajectory_filename="results/all.cfg",
-          #cfg_trajectory_filename="results/cfg.txt",
-          #xyz_trajectory_filename="results/xyz.txt",
           trajectory_type = 'cfg',
           analysis=[msd_analysis])
           
@@ -40,7 +42,7 @@ with open('results/MSD.data', 'w') as f:
     msd_analysis.printResults(f)     
 
 
-lines_per_file = 141
+lines_per_file = 2013
 number = 0
 smallfile = 0
 with open('results/all.cfg') as bigfile:
@@ -48,7 +50,7 @@ with open('results/all.cfg') as bigfile:
         if lineno % lines_per_file == 0:
             if smallfile:
                 smallfile.close()
-            small_filename = 'results/00{}.cfg'.format(number) #lineno + lines_per_file)
+            small_filename = 'results/00{}.cfg'.format(number)
             smallfile = open(small_filename, "w")
             number = number + 1
         smallfile.write(line)
