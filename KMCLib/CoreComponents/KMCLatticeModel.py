@@ -158,24 +158,19 @@ must be given as string."""
         if cpp_model.interactions().totalAvailableSites() == 0:
             raise Error("No available processes. None of the processes defined as input match any position in the configuration. Change the initial configuration or processes to run KMC.")
 #####
-##### Custom addiation to use_trajectory -- added CFG and all.
+##### Custom addiation to use_trajectory -- added CFG.
 #####
         # Setup a trajectory object.
         if use_trajectory:
             if trajectory_type == 'lattice':
                 trajectory = LatticeTrajectory(trajectory_filename=trajectory_filename,
                                                configuration=self.__configuration)
-            #elif trajectory_type == 'xyz':
-             #   trajectory = XYZTrajectory(trajectory_filename=xyz_trajectory_filename,
-             #                              configuration=self.__configuration)
+            elif trajectory_type == 'xyz':
+                trajectory = XYZTrajectory(trajectory_filename=trajectory_filename,
+                                           configuration=self.__configuration)
             elif trajectory_type == 'cfg':
                 trajectory = CFGTrajectory(trajectory_filename=trajectory_filename,
-                                           configuration=self.__configuration)
-            #elif trajectory_type == 'all':
-            #    trajectory1 = CFGTrajectory(trajectory_filename=cfg_trajectory_filename,
-            #                               configuration=self.__configuration) 
-            #    trajectory2 = LatticeTrajectory(trajectory_filename=lattice_trajectory_filename,
-            #                                   configuration=self.__configuration)                                                                                                                
+                                           configuration=self.__configuration)                                               
             else:
                 raise Error("The 'trajectory_type' input must be either 'lattice' or 'xyz'.")
 

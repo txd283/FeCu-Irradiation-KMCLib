@@ -74,9 +74,9 @@ class XYZTrajectory(Trajectory):
                 # Cellvectors.
                 cell_vectors = configuration.lattice().unitCell().cellVectors()
                 trajectory.write("CELL VECTORS\n")
-                trajectory.write("a: %15.10e %15.10e %15.10e\n"%(cell_vectors[0][0], cell_vectors[0][1], cell_vectors[0][2]))
-                trajectory.write("b: %15.10e %15.10e %15.10e\n"%(cell_vectors[1][0], cell_vectors[1][1], cell_vectors[1][2]))
-                trajectory.write("c: %15.10e %15.10e %15.10e\n\n"%(cell_vectors[2][0], cell_vectors[2][1], cell_vectors[2][2]))
+                trajectory.write("a: %.2f %.2f %.2f\n"%(cell_vectors[0][0], cell_vectors[0][1], cell_vectors[0][2]))
+                trajectory.write("b: %.2f %.2f %.2f\n"%(cell_vectors[1][0], cell_vectors[1][1], cell_vectors[1][2]))
+                trajectory.write("c: %.2f %.2f %.2f\n\n"%(cell_vectors[2][0], cell_vectors[2][1], cell_vectors[2][2]))
 
                 # Repetitions.
                 repetitions = configuration.lattice().repetitions()
@@ -141,12 +141,12 @@ class XYZTrajectory(Trajectory):
                         
                         trajectory.write("STEP %i\n"%(step))
                         trajectory.write("          %i\n"%(n_atoms))
-                        trajectory.write("    TIME %15.10e\n"%(time))
+                        trajectory.write("    TIME %.2f\n"%(time))
 
                         for j in range(n_atoms):
                             t = self.__atom_id_types[i][j]
                             c = self.__atom_id_coordinates[i][j]
-                            trajectory.write(" %16s   %15.10e %15.10e %15.10e  %i\n"%(t, c[0], c[1], c[2], j))
+                            trajectory.write(" %16s   %.3f %.3f %.3f  %i\n"%(t, c[0], c[1], c[2], j))
 
             # While the other processes wait.
             MPICommons.barrier()

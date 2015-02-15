@@ -1,7 +1,6 @@
 # KMCLib application for diffusion of vacancies in pure bcc Fe material.
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
-
 from KMCLib import *
 from customRates import *
 import numpy
@@ -25,10 +24,10 @@ msd_analysis = OnTheFlyMSD(history_steps=1000,
                            track_type="V")                        
                         
 # seed=None uses wall-clock time
-control_parameters = KMCControlParameters(number_of_steps=100000,
-                                          dump_interval=1000,
-                                          analysis_interval=100,
-                                          seed=None)              
+control_parameters = KMCControlParameters(number_of_steps=10,
+                                          dump_interval=1,
+                                          analysis_interval=1,
+                                          seed=111)              
 
 # Run the model and save the atom poisitons to file
 model.run(control_parameters=control_parameters,
@@ -40,8 +39,10 @@ model.run(control_parameters=control_parameters,
 with open('results/MSD.data', 'w') as f:
     msd_analysis.printResults(f)     
 
-
-lines_per_file = 6763
+#split the cfg into different timesteps for atomeye
+numberOfAtoms = 250
+# 13 is the line number of the header printed.
+lines_per_file = 13 + numberOfAtoms 
 number = 0
 smallfile = 0
 with open('results/all.cfg') as bigfile:
@@ -56,5 +57,5 @@ with open('results/all.cfg') as bigfile:
     if smallfile:
         smallfile.close()
 
-# open up atomeye with the cfg files generated
+#open up atomeye with the cfg files generated
 #os.system(" open /usr/local/bin/atomeye results/cfg000.cfg")

@@ -16,20 +16,19 @@ kT = k*T
 rate = v*math.exp(-E_m/(kT))
 v_rate = 1.0
 
-
 class CustomRateCalculator(KMCRateCalculatorPlugin):
 
     def rate(self, geometry, types_before, types_after, rate_constant, process_number, coordinate):
 
         # For every vacancy, check the neighbours around it to see if they are V.
-        V_neighbours = len([ e for e in [types_before[1], types_before[2], types_before[3], types_before[4], types_before[5],types_before[6], types_before[7], types_before[8]] if e == "V"])
+        V_neighbours = len([ i for i in [types_before[1], types_before[2], types_before[3], types_before[4], types_before[5],types_before[6], types_before[7], types_before[8]] if i == "V"])
                        
-        print("V_neighbours = %i \n"%(V_neighbours))
+        #print("V_neighbours = %i \n"%(V_neighbours))
         
         #change the value of the activation energy with or without a binding energy of a V-V pair, or more.        
         if V_neighbours >= 1:
             v_rate = v*math.exp(-(E_m + E_b)/(kT))
-            print("v_rate = %.1f"%(v_rate))
+            #print("v_rate = %.1f"%(v_rate))
             
         elif V_neighbours == 0:
             v_rate = rate
@@ -37,7 +36,6 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         return v_rate
 
     def cutoff(self):
-
         #To determine the radial cutoff of the geometry around the central lattice site to cut out and send down to the custom rate function.
         #Restricts the custom rate to look in the primitive cell internal coordinates (float)
 

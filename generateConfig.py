@@ -11,14 +11,14 @@ unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
                                       [0.5,0.5,0.5]])
 
 lattice = KMCLattice(unit_cell=unit_cell,
-                     repetitions=(15,15,15),
+                     repetitions=(5,5,5),
                      periodic=(True,True,True))
 
-types = ['Fe']*6750
-for i in range(200):
-    pos = int(numpy.random.rand()*6750)
+types = ['Fe']*(5*5*5*2)
+for i in range(20):
+    pos = int(numpy.random.rand()*250)
     while (types[pos] == "V"):
-        pos = int(numpy.random.rand()*6750)
+        pos = int(numpy.random.rand()*250)
     types[pos] = "V"
 
 # Setup the configuration.
@@ -29,3 +29,4 @@ configuration = KMCConfiguration(lattice=lattice,
 # Use the _script() function to get a script that can generate the configuration.
 print "from KMCLib import *"
 print configuration._script()
+#print configuration._atkScript(types)

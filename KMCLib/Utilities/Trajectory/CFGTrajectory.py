@@ -94,12 +94,12 @@ class CFGTrajectory(Trajectory):
                         n_atoms = len(self.__atom_id_types[i])
                         
                         # calculate the super-cell length
-                        repetitions = 15.0
+                        repetitions = 5.0
                         H = 2.87 * repetitions
                         
                         #supercell headers for CFG file for atomeye
                         trajectory.write("Number of particles = %i\n\n"%(n_atoms))
-                        trajectory.write("A = 10 Angstrom\n")
+                        trajectory.write("A = 2 Angstrom\n")
                         trajectory.write("H0(1,1) = %f A\n"%(H))
                         trajectory.write("H0(1,2) = 0 . 0 A\n")  
                         trajectory.write("H0(1,3) = 0 . 0 A\n") 
@@ -119,6 +119,7 @@ class CFGTrajectory(Trajectory):
                             s1 = c[0]/H
                             s2 = c[1]/H
                             s3 = c[2]/H
+                            #print("X: %f Y: %f Z: %f"%(s1, s2, s3))
                             
                             #change the mass atomic number depending on type of atoms there
                             if t == 'Fe':
