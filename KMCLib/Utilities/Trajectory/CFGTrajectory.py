@@ -94,12 +94,11 @@ class CFGTrajectory(Trajectory):
                         n_atoms = len(self.__atom_id_types[i])
                         
                         # calculate the super-cell length
-                        repetitions = 5.0
-                        H = 2.87 * repetitions
+                        H = 5.0
                         
                         #supercell headers for CFG file for atomeye
                         trajectory.write("Number of particles = %i\n\n"%(n_atoms))
-                        trajectory.write("A = 2 Angstrom\n")
+                        trajectory.write("A = 1 Angstrom\n")
                         trajectory.write("H0(1,1) = %f A\n"%(H))
                         trajectory.write("H0(1,2) = 0 . 0 A\n")  
                         trajectory.write("H0(1,3) = 0 . 0 A\n") 
@@ -114,8 +113,14 @@ class CFGTrajectory(Trajectory):
                         for j in range(n_atoms):
                             t = self.__atom_id_types[i][j]
                             c = self.__atom_id_coordinates[i][j]
-                            
                             #reduce the coordinates
+                            """if c[0] < 0.0:
+                                s1 = 1- (c[0] - math.floor(c[0]))
+                                print ("reduced<: %.2f"%(s1)
+                            elif c[0] > 5.0:
+                                s1 = c[0] - math.floor(c[0])
+                                print ("reduced>: %.2f"%(s1)
+                            """
                             s1 = c[0]/H
                             s2 = c[1]/H
                             s3 = c[2]/H
@@ -127,9 +132,9 @@ class CFGTrajectory(Trajectory):
                             
                             elif t == 'V':
                                 mass = 1.0
-                            
+
                             # write the cfg file with reduced coordinates
-                            trajectory.write("%f %s %f %f %f 0.0 0.0 0.0\n"%(mass, t, s1, s2, s3))
+                            trajectory.write("%.2f %s %.2f %.2f %.2f 0.0 0.0 0.0\n"%(mass, t, s1, s2, s3))
                         
                         
             # While the other processes wait.

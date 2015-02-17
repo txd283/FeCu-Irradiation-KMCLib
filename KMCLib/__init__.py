@@ -29,6 +29,7 @@ from KMCLib.Utilities.Trajectory.CFGTrajectory import CFGTrajectory
 
 
 
+
 __all__ = ['KMCLocalConfiguration', 'KMCInteractions', 'KMCConfiguration',
            'KMCLattice', 'KMCLatticeModel', 'KMCUnitCell',
            'KMCControlParameters', 'KMCInteractionsFromScript',

@@ -11,14 +11,15 @@ unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
                                       [0.5,0.5,0.5]])
 
 lattice = KMCLattice(unit_cell=unit_cell,
-                     repetitions=(5,5,5),
+                     repetitions=(15,15,15),
                      periodic=(True,True,True))
+n = (15**3)*2
 
-types = ['Fe']*(5*5*5*2)
-for i in range(20):
-    pos = int(numpy.random.rand()*250)
+types = ['Fe']*n
+for i in range(100):
+    pos = int(numpy.random.rand()*n)
     while (types[pos] == "V"):
-        pos = int(numpy.random.rand()*250)
+        pos = int(numpy.random.rand()*n)
     types[pos] = "V"
 
 # Setup the configuration.

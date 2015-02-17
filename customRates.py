@@ -6,15 +6,14 @@ import numpy
 import math
 
 #### values required for vacancy diffusion, energy in eV, T in K, v is the jump attemps in s^-1
-
 E_m = 0.55
-E_b = 0.2 #binding energy of V-V
+E_b = 0.2
 k = 0.862e-4
 T = 560
 v = 1e13
 kT = k*T
 rate = v*math.exp(-E_m/(kT))
-v_rate = 1.0
+v_clustering_rate = v*math.exp(-(E_m + E_b)/(kT))
 
 class CustomRateCalculator(KMCRateCalculatorPlugin):
 
@@ -25,19 +24,15 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
                        
         #print("V_neighbours = %i \n"%(V_neighbours))
         
-        #change the value of the activation energy with or without a binding energy of a V-V pair, or more.        
+        # change the value of the activation energy with or without a binding energy of a V-V pair, or more.        
         if V_neighbours >= 1:
-            v_rate = v*math.exp(-(E_m + E_b)/(kT))
-            #print("v_rate = %.1f"%(v_rate))
-            
+            v_rate = v_clustering_rate
         elif V_neighbours == 0:
             v_rate = rate
-        
+            
         return v_rate
 
     def cutoff(self):
-        #To determine the radial cutoff of the geometry around the central lattice site to cut out and send down to the custom rate function.
-        #Restricts the custom rate to look in the primitive cell internal coordinates (float)
-
-        # is this number a fuction of a?
+        # To determine the radial cutoff of the geometry around the central lattice site to cut out and send down to the custom rate function.
+        # Restricts the custom rate to look in the primitive cell internal coordinates (float)
         return 1.0
