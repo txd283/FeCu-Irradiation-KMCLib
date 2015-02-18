@@ -159,7 +159,7 @@ processes.append(KMCProcess(coordinates=coordinates8,
                             rate_constant=rate))
                 
 # add second nearest neighbours in
-"""
+
 processes.append(KMCProcess(coordinates=coordinates9,
                             elements_before=before_diff,
                             elements_after=after_diff,
@@ -243,7 +243,7 @@ processes.append(KMCProcess(coordinates=coordinates14,
                             move_vectors=None,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
-"""
+
 # Construct the interactions object.
 interactions = KMCInteractions(processes=processes,
                                implicit_wildcards=True)

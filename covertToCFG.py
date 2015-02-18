@@ -3,15 +3,17 @@ repetitions = (len(sites)/2)**(1/3.0)
 mass = 0.0
 i = 0 
 # loop for the number of steps (called i).
+print ("Converting the lattice trajectory to .cfg files for atomeye.")
 for steps in range(len(steps)):
-    #print ("steps = %f"%(steps))
+    n_atoms = len(sites)
+    print("Total number of atoms = %i"%(n_atoms))
+    print ("Step = %.1f"%(steps))
     # open the file lattice00{}.cfg where {} is the variable which increase 0,1,2,3... by n
     steps2 = str(steps) # convert to string to be used in the filename.
-    filename = 'output00' + steps2 + '.cfg'
+    filename = 'cfg0' + steps2 + '.cfg'
     file = open(filename, 'w')
-    # length of the total sites i.e total number of atoms
-        # print out the header of cfg
-    n_atoms = len(sites)
+    print("Writing file %s"%(filename))
+    # print out the header of cfg
     file.write("Number of particles = %i\n\n"%(n_atoms))
     file.write("A = 4 Angstrom\n")
     file.write("H0(1,1) = %.1f A\n"%(repetitions))

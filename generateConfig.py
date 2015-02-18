@@ -2,6 +2,9 @@
 
 from KMCLib import *
 import numpy
+import sys
+
+repititons = 40
 
 # Define the unit cell.
 unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
@@ -11,22 +14,23 @@ unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
                                       [0.5,0.5,0.5]])
 
 lattice = KMCLattice(unit_cell=unit_cell,
-                     repetitions=(15,15,15),
+                     repetitions=(repititons,repititons,repititons),
                      periodic=(True,True,True))
-n = (15**3)*2
+n = (repititons**3)*2
 
+#print("Generating lattice with %i of atoms..."%(n))
 types = ['Fe']*n
-for i in range(100):
+for i in range(500):
     pos = int(numpy.random.rand()*n)
     while (types[pos] == "V"):
         pos = int(numpy.random.rand()*n)
     types[pos] = "V"
+#print("Done")
 
 # Setup the configuration.
 configuration = KMCConfiguration(lattice=lattice,
                                  types=types,
                                  possible_types=["V","Fe"])
-
 # Use the _script() function to get a script that can generate the configuration.
 print "from KMCLib import *"
 print configuration._script()
