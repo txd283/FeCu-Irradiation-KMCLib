@@ -1,3 +1,6 @@
+
+
+
 #Calculates the repetitons based on the number of atoms
 repetitions = (len(sites)/2)**(1/3.0)
 mass = 0.0
@@ -7,7 +10,7 @@ print ("Converting the lattice trajectory to .cfg files for atomeye.")
 for steps in range(len(steps)):
     n_atoms = len(sites)
     print("Total number of atoms = %i"%(n_atoms))
-    print ("Step = %.1f"%(steps))
+    print ("Step = %f"%(steps))
     # open the file lattice00{}.cfg where {} is the variable which increase 0,1,2,3... by n
     steps2 = str(steps) # convert to string to be used in the filename.
     filename = 'cfg0' + steps2 + '.cfg'
@@ -39,9 +42,11 @@ for steps in range(len(steps)):
         atom_ID = types[i][j]
         #print ("type_of_atom1 = %s"%(type_of_atom1))
         if atom_ID == 'Fe':
-            mass = 58.0
-        elif atom_ID == 'V':
-            mass = 1.0
+            mass = 55.845
+        elif atom_ID == 'Va':
+            mass = 0.001
+        elif atom_ID == 'Cu':
+            mass = 63.543
         #print ("%.2f %s %.2f %.2f %.2f 0.0 0.0 0.0\n"%(mass, type_of_atom1, s1, s2, s3))
         file.write("%.2f %s %.2f %.2f %.2f 0.0 0.0 0.0\n"%(mass, atom_ID, s1, s2, s3))
         j += 1
