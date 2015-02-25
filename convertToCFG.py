@@ -41,14 +41,17 @@ for steps in range(len(steps)):
         s3 = position[2]/repetitions  # works
         atom_ID = types[i][j]
         #print ("type_of_atom1 = %s"%(type_of_atom1))
-        if atom_ID == 'Fe':
+        if atom_ID == '1':
             mass = 55.845
-        elif atom_ID == 'Va':
-            mass = 0.001
-        elif atom_ID == 'Cu':
+            type_atom = 'Fe'
+        elif atom_ID == '0':
+            mass = 1.0
+            type_atom = 'H'
+        elif atom_ID == '0.1':
             mass = 63.543
+            type_atom = 'Cu'
         #print ("%.2f %s %.2f %.2f %.2f 0.0 0.0 0.0\n"%(mass, type_of_atom1, s1, s2, s3))
-        file.write("%.2f %s %.2f %.2f %.2f 0.0 0.0 0.0\n"%(mass, atom_ID, s1, s2, s3))
+        file.write("%.2f %s %.2f %.2f %.2f 0.0 0.0 0.0\n"%(mass, type_atom, s1, s2, s3))
         j += 1
     i += 1
     file.close()

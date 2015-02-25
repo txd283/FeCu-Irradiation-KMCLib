@@ -1,13 +1,14 @@
+#!/usr/bin/python
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
 from KMCLib import *
 import numpy
 import sys
 
-repititons = 5
+repititons = 10
 n = (repititons**3)*2
 
-vacancies = 5
+vacancies = 100
 copper = int(round(n*3e-3))
 
 # Define the unit cell.
@@ -21,26 +22,27 @@ lattice = KMCLattice(unit_cell=unit_cell,
                      repetitions=(repititons,repititons,repititons),
                      periodic=(True,True,True))
 
-types = ['Fe']*n
+types = ['1']*n
 
 # number of vacancies randomly distributed
 for Vacancy in range(vacancies):
     pos = int(numpy.random.rand()*n)
-    while (types[pos] == "Va"):
+    while (types[pos] == "0"):
         pos = int(numpy.random.rand()*n)
-    types[pos] = "Va"
+    types[pos] = "0"
 
 # number of vacancies randomly distributed
+"""
 for Cu in range(copper):
     pos = int(numpy.random.rand()*n)
     while (types[pos] == "Cu"):
         pos = int(numpy.random.rand()*n)
     types[pos] = "Cu"
-
+"""
 # Setup the configuration.
 configuration = KMCConfiguration(lattice=lattice,
                                  types=types,
-                                 possible_types=["Va","Fe","Cu"])
+                                 possible_types=["0","1","0.1"])
 
 # Use the _script() function to get a script that can generate the configuration.
 print "from KMCLib import *"
