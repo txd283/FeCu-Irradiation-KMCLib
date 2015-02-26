@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
+# Used to generate a config.py file for the model
+# run script with command './generateConfig.py > config.py'
 
 from KMCLib import *
 import numpy
-import sys
 
-repititons = 10
+repititons = 50
 n = (repititons**3)*2
 
-vacancies = 100
-copper = int(round(n*3e-3))
+vacancies = 250
+copper = int(round(n*3e-3)) # ~0.3% copper in RPV steel
 
 # Define the unit cell.
 unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
@@ -32,13 +33,13 @@ for Vacancy in range(vacancies):
     types[pos] = "0"
 
 # number of vacancies randomly distributed
-"""
+
 for Cu in range(copper):
     pos = int(numpy.random.rand()*n)
-    while (types[pos] == "Cu"):
+    while (types[pos] == "0.1"):
         pos = int(numpy.random.rand()*n)
-    types[pos] = "Cu"
-"""
+    types[pos] = "0.1"
+
 # Setup the configuration.
 configuration = KMCConfiguration(lattice=lattice,
                                  types=types,

@@ -1,3 +1,5 @@
+# Used to calculate the nearest neighbours in a supercell of 2.0 cutoff in CustomRate
+"""
   NN1 = numpy.zeros(shape=(15, 8))
   NN2 = numpy.zeros(shape=(15, 6))
   for j in range(0,15):
@@ -18,22 +20,6 @@
           
   print(NN1)
   print(NN2)	   
-	   
-	   
-	   
-       b_first_neighbours_Fe = int(types_before[1]) + int(types_before[2]) + int(types_before[3]) + int(types_before[4]) + int(types_before[5]) + int(types_before[6]) + int(types_before[7]) + int(types_before[8])
-       
-       b_first_neighbours_Va = 8 - b_first_neighbours_Fe
-       
-       a_first_neighbours_Fe = int(types_after[1]) + int(types_after[2]) + int(types_after[3]) + int(types_after[4]) + int(types_after[5]) + int(types_after[6]) + int(types_after[7]) + int(types_after[8])
-       a_first_neighbours_Va = 8 - a_first_neighbours_Fe
-       
-       b_second_neighbours_Fe = int(types_before[9]) + int(types_before[10]) + int(types_before[11]) + int(types_before[12]) + int(types_before[13]) + int(types_before[14])
-       b_second_neighbours_Va = 6 - b_second_neighbours_Fe
-       
-       a_second_neighbours_Fe = int(types_after[9]) + int(types_after[10]) + int(types_after[11]) + int(types_after[12]) + int(types_after[13]) + int(types_after[14])
-       a_second_neighbours_Va = 6 - a_second_neighbours_Fe
-      
-	   
+"""
 	   
 	   

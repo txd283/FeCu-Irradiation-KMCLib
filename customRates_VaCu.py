@@ -1,4 +1,4 @@
-# here a custom rate is calculated for unique events in the simulation
+# Custom rate is calculated for unique events in the simulation
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
 from KMCLib import *
@@ -6,32 +6,31 @@ from math import floor
 import numpy
 import math
 
-# values required for vacancy diffusion, energy in eV, T in K, v is the jump attemps in s^-1
-
-E_m = 0.65
+# values required for vacancy diffusion, energy in eV, T in K, v is the jump atcounts in s^-1
+E_m_Fe = 0.65
+E_m_Cu = 0.50
 k = 0.862e-4
 T = 560
-v = 1e13
+v_Fe = 9.79e12
+v_Cu = 7.16e12
 kT = k*T
 
-# binding energies
-E_bVaVa = 0.171
-E_bCuCu = 0.235
-E_bCuVa = 0.249
-
 # pair interaction values
-e_FeVa1 = -0.191
-e_FeVa2 = -0.096
-e_VaVa1 = 0.255
+e_FeFe1 = -0.778
+e_FeFe2 = -0.389
+e_VaFe1 = -0.191
+e_VaFe2 = -0.096
+e_VaVa1 = 0.225
 e_VaVa2 = -0.047
-e_CuVa1 = -0.247
-e_CuVa2 = -0.206
+e_VaCu1 = -0.247
+e_VaCu2 = -0.206
 e_FeCu1 = -0.585
 e_FeCu2 = -0.326
 e_CuCu1 = -0.627
 e_CuCu2 = -0.314
 
-
+# The first nearest neighbours for all atoms in the lattice in types_before and types_after. 
+# Used to find local configurations for energy calculations
 NN1 = [[  1,   2,   3,   4,   5,   6,   7,   8,],
  [  0,   9,  10,  11,  15,  16,  19,  51,],
  [  0,   9,  10,  12,  15,  17,  20,  52,],
@@ -48,7 +47,8 @@ NN1 = [[  1,   2,   3,   4,   5,   6,   7,   8,],
  [  3,   4,   7,   8,  37,  38,  45,  46,],
  [  5,   6,   7,   8,  47,  48,  49,  50,]]
  
- 
+# The second nearest neighbours for all atoms in the lattice in types_before and types_after. 
+# Used to find local configurations for energy calculations
 NN2 = [[  9,  10,  11,  12,  13,  14,],
  [  2,   3,   5,  27,  31,  33,],
  [  1,   4,   6,  28,  32,  34,],
@@ -74,102 +74,222 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
     def rate(self, geometry, types_before, types_after, rate_constant, process_number, coordinate):
      
         self._times_called += 1
-        print("----------------------- CHECK -----------------------")
-        print("Iteration = %i"%(self._times_called))
-        
+                
         # find the new position of the moved atom
         for i in range(1,len(types_before)):
             if (float(types_before[i])-float(types_after[i])) != 0.0:
                 new_position = i
                 break
         
-        # types_before first neighbours
+        # define variables
         
-        b_first_neighbours_Fe = 0.0
-        b_first_neighbours_Cu = 0.0
-        b_sum_first_FeCu = 0.0
+        N_FeFe1_b = 0.0
+        N_FeFe1_a = 0.0
+        N_FeFe2_b = 0.0
+        N_FeFe2_a = 0.0
         
+        N_CuCu1_b = 0.0
+        N_CuCu1_a = 0.0
+        N_CuCu2_b = 0.0
+        N_CuCu2_a = 0.0
+        
+        N_VaVa1_b = 0.0
+        N_VaVa1_a = 0.0
+        N_VaVa2_b = 0.0
+        N_VaVa2_a = 0.0
+        
+        N_VaFe1_b = 0.0
+        N_VaFe1_a = 0.0
+        N_VaFe2_b = 0.0
+        N_VaFe2_a = 0.0
+        
+        N_FeVa1_b = 0.0
+        N_FeVa1_a = 0.0
+        N_FeVa2_b = 0.0
+        N_FeVa2_a = 0.0
+        
+        N_VaCu1_b = 0.0
+        N_VaCu1_a = 0.0
+        N_VaCu2_b = 0.0
+        N_VaCu2_a = 0.0
+          
+        N_CuVa1_b = 0.0
+        N_CuVa1_a = 0.0
+        N_CuVa2_b = 0.0
+        N_CuVa2_a = 0.0      
+        
+        N_FeCu1_b = 0.0
+        N_FeCu1_a = 0.0
+        N_FeCu2_b = 0.0
+        N_FeCu2_a = 0.0
+        
+        N_CuFe1_b = 0.0
+        N_CuFe1_a = 0.0
+        N_CuFe2_b = 0.0
+        N_CuFe2_a = 0.0
+        
+        # find first neighbours of Va before move
+        count = 0.0
         for i in range(8):
-            b_sum_first_FeCu += float(types_before[int(NN1[0][i])])
-            b_first_neighbours_Fe = floor(b_sum_first_FeCu)
-        
-        b_first_neighbours_Cu = (b_sum_first_FeCu - floor(b_sum_first_FeCu))*10.0
+            count += float(types_before[int(NN1[0][i])])
+        N_VaFe1_b = floor(count)
+        N_VaCu1_b = (count - floor(count))*10.0
+        N_VaVa1_b = abs(8.0 - N_VaFe1_b - N_VaCu1_b)
 
-        b_first_neighbours_Va = abs(8.0 - b_first_neighbours_Fe - b_first_neighbours_Cu)
-  
-        # types_before second neighbours
-  
-        b_second_neighbours_Fe = 0.0
-        b_second_neighbours_Cu = 0.0
-        b_sum_second_FeCu = 0.0
-        
+        # find second neighbours of Va before move
+        count = 0.0
         for i in range(6):
-            b_sum_second_FeCu += float(types_before[int(NN2[0][i])])
-            b_second_neighbours_Fe = floor(b_sum_second_FeCu)
+            count += float(types_before[int(NN2[0][i])])
+        N_VaFe2_b = floor(count)
+        N_VaCu2_b = (count - floor(count))*10.0
+        N_VaVa2_b = abs(6.0 - N_VaFe2_b - N_VaCu2_b)
         
-        b_second_neighbours_Cu = (b_sum_second_FeCu - floor(b_sum_second_FeCu))*10    
-       
-        b_second_neighbours_Va = abs(6.0 - b_second_neighbours_Fe - b_second_neighbours_Cu)
-        
-        # types_after first neighbours
-        
-        a_first_neighbours_Fe = 0.0
-        a_first_neighbours_Cu = 0.0
-        a_sum_first_FeCu = 0.0
-        
+        # find first neighbours of Va after move
+        count = 0.0
         for i in range(8):
-            a_sum_first_FeCu += float(types_after[int(NN1[new_position][i])])
-            a_first_neighbours_Fe = floor(a_sum_first_FeCu)
+            count += float(types_after[int(NN1[new_position][i])])
+        N_VaFe1_a = floor(count)
+        N_VaCu1_a = (count - floor(count))*10.0
+        N_VaVa1_a = abs(8.0 - N_VaFe1_a - N_VaCu1_a)
+  
+        # find second neighbours of Va after move
+        count = 0.0
+        for i in range(6):
+            count += float(types_after[int(NN2[new_position][i])])
+        N_VaFe2_a = floor(count)
+        N_VaCu2_a = (count - floor(count))*10.0
+        N_VaVa2_a = abs(6.0 - N_VaFe2_a - N_VaCu2_a)
+        
+        # Find what atom the Va is swapping with - either a Fe (1) or Cu(0.1)
+        if types_after[0] == "1":
             
-        a_first_neighbours_Cu = (a_sum_first_FeCu - floor(a_sum_first_FeCu))*10
+            # find first neighbours of Fe before move
+            count = 0.0
+            for i in range(8):
+                count += float(types_before[int(NN1[new_position][i])])
+            N_FeFe1_b = floor(count)
+            N_FeCu1_b = (count - floor(count))*10.0
+            N_FeVa1_b = abs(8.0 - N_FeFe1_b - N_FeCu1_b)
+            
+            # find second neighbours of Fe before move
+            count = 0.0
+            for i in range(6):
+                count += float(types_before[int(NN2[new_position][i])])
+            N_FeFe2_b = floor(count)
+            N_FeCu2_b = (count - floor(count))*10.0
+            N_FeVa2_b = abs(6.0 - N_FeFe2_b - N_FeCu2_b)
         
-        a_first_neighbours_Va = abs(8.0 - a_first_neighbours_Fe - a_first_neighbours_Cu)
+            # find first neighbours of Fe after move
+            count = 0.0
+            for i in range(8):
+                count += float(types_after[int(NN1[0][i])])
+            N_FeFe1_a = floor(count)
+            N_FeCu1_a = (count - floor(count))*10.0
+            N_FeVa1_a = abs(8.0 - N_FeFe1_a - N_FeCu1_a)
+  
+            # find second neighbours of Fe after move
+            count = 0.0
+            for i in range(6):
+                count += float(types_after[int(NN2[0][i])])
+            N_FeFe2_a = floor(count)
+            N_FeCu2_a = (count - floor(count))*10.0
+            N_FeVa2_a = abs(6.0 - N_FeFe2_a - N_FeCu2_a)
         
-        # types_after second neighbours
-
-        a_second_neighbours_Fe = 0.0
-        a_second_neighbours_Cu = 0.0
-        a_sum_second_FeCu = 0.0
+        else:
+            
+            # find first neighbours of Cu before move
+            count = 0.0
+            for i in range(8):
+                count += float(types_before[int(NN1[new_position][i])])
+            N_CuFe1_b = floor(count)
+            N_CuCu1_b = (count - floor(count))*10.0
+            N_CuVa1_b = abs(8.0 - N_CuFe1_b - N_CuCu1_b)
+            
+            # find second neighbours of Cu before move
+            count = 0.0
+            for i in range(6):
+                count += float(types_before[int(NN2[new_position][i])])
+            N_CuFe2_b = floor(count)
+            N_CuCu2_b = (count - floor(count))*10.0
+            N_CuVa2_b = abs(6.0 - N_CuFe2_b - N_CuCu2_b)
         
-        for i in range(6):
-            a_sum_second_FeCu += float(types_after[int(NN2[new_position][i])])
-            a_second_neighbours_Fe = floor(a_sum_second_FeCu)
+            # find first neighbours of Cu after move
+            count = 0.0
+            for i in range(8):
+                count += float(types_after[int(NN1[0][i])])
+            N_CuFe1_a = floor(count)
+            N_CuCu1_a = (count - floor(count))*10.0
+            N_CuVa1_a = abs(8.0 - N_CuFe1_a - N_CuCu1_a)
+  
+            # find second neighbours of Cu after move
+            count = 0.0
+            for i in range(6):
+                count += float(types_after[int(NN2[0][i])])
+            N_CuFe2_a = floor(count)
+            N_CuCu2_a = (count - floor(count))*10.0
+            N_CuVa2_a = abs(6.0 - N_CuFe2_a - N_CuCu2_a)
         
-        a_second_neighbours_Cu = (a_sum_second_FeCu - floor(a_sum_second_FeCu))*10
-         
-        a_second_neighbours_Va = abs(6.0 - a_second_neighbours_Fe - a_second_neighbours_Cu)
         
-        # energy calculation
-       
-        E = E_m 
+        D_N_FeFe1 = N_FeFe1_a - N_FeFe1_b
+        D_N_FeFe2 = N_FeFe2_a - N_FeFe2_b
+        D_N_CuCu1 = N_CuCu1_a - N_CuCu1_b
+        D_N_CuCu2 = N_CuCu2_a - N_CuCu2_b
+        D_N_VaVa1 = N_VaVa1_a - N_VaVa1_b
+        D_N_VaVa2 = N_VaVa2_a - N_VaVa2_b
+        D_N_VaFe1 = N_VaFe1_a + N_FeVa1_a - N_VaFe1_b - N_FeVa1_b
+        D_N_VaFe2 = N_VaFe2_a + N_FeVa2_a - N_VaFe2_b - N_FeVa2_b    
+        D_N_VaCu1 = N_VaCu1_a + N_CuVa1_a - N_VaCu1_b - N_CuVa1_b
+        D_N_VaCu2 = N_VaCu2_a + N_CuVa2_a - N_VaCu2_b - N_CuVa2_b
+        D_N_FeCu1 = N_FeCu1_a + N_CuFe1_a - N_FeCu1_b - N_CuFe1_b
+        D_N_FeCu2 = N_FeCu2_a + N_CuFe2_a - N_FeCu2_b - N_CuFe2_b
         
-        # rate calculation
-        
-        rate = v*math.exp(-E/kT)
- 
-        # print out
-        
-        print("Va moved to %.0f\n"%(new_position))
-        print("b_first_neighbours_Va = %.0f"%(b_first_neighbours_Va))
-        print("b_second_neighbours_Va = %.0f"%(b_second_neighbours_Va))
-        print("b_first_neighbours_Fe = %.0f"%(b_first_neighbours_Fe))
-        print("b_second_neighbours_Fe = %.0f"%(b_second_neighbours_Fe))
-        print("b_first_neighbours_Cu = %.0f"%(b_first_neighbours_Cu))
-        print("b_second_neighbours_Cu = %.0f\n"%(b_second_neighbours_Cu))
-        
-        print("a_first_neighbours_Va = %.0f"%(a_first_neighbours_Va))
-        print("a_second_neighbours_Va = %.0f"%(a_second_neighbours_Va))
-        print("a_first_neighbours_Fe = %.0f"%(a_first_neighbours_Fe))
-        print("a_second_neighbours_Fe = %.0f"%(a_second_neighbours_Fe))
-        print("a_first_neighbours_Cu = %.0f"%(a_first_neighbours_Cu))
-        print("a_second_neighbours_Cu = %.0f\n"%(a_second_neighbours_Cu))
-        
+        # binding energy calculation
+        E_b = (D_N_VaVa1*e_VaVa1 +
+               D_N_VaFe1*e_VaFe1 + 
+               D_N_FeFe1*e_FeFe1 + 
+               D_N_VaVa2*e_VaVa2 + 
+               D_N_VaFe2*e_VaFe2 + 
+               D_N_FeFe2*e_FeFe2 + 
+               D_N_VaCu1*e_VaCu1 + 
+               D_N_VaCu2*e_VaCu2 + 
+               D_N_FeCu1*e_FeCu1 + 
+               D_N_FeCu2*e_FeCu2 + 
+               D_N_CuCu1*e_CuCu1 + 
+               D_N_CuCu2*e_CuCu2)/2
+    
+        # if the atom is eith Fe (1) or Cu (0.1) and calculate the rate
+        if types_after[0] == '1':
+            E = E_m_Fe + E_b
+            rate = v_Fe*math.exp(-E/kT)
+            
+        else:
+            E = E_m_Cu + E_b
+            rate = v_Cu*math.exp(-E/kT)
+        """
+        # print out useful variables for diagnostics 
+        print("----------------------- CHECK -----------------------")
+        print("Iteration = %i"%(self._times_called))
+        print("Vacancy moved to %i\n"%(new_position))
+        print("D_N_FeFe1 = %.0f"%(D_N_FeFe1))
+        print("D_N_VaFe1 = %.0f"%(D_N_VaFe1))
+        print("D_N_VaVa1 = %.0f"%(D_N_VaVa1))
+        print("D_N_VaCu1 = %.0f"%(D_N_VaCu1))
+        print("D_N_FeCu1 = %.0f"%(D_N_FeCu1))
+        print("D_N_CuCu1 = %.0f\n"%(D_N_CuCu1))
+        print("D_N_FeFe2 = %.0f"%(D_N_FeFe2))
+        print("D_N_VaFe2 = %.0f"%(D_N_VaFe2))
+        print("D_N_VaVa2 = %.0f"%(D_N_VaVa2))
+        print("D_N_VaCu2 = %.0f"%(D_N_VaCu2))
+        print("D_N_FeCu2 = %.0f"%(D_N_FeCu2))
+        print("D_N_CuCu2 = %.0f\n"%(D_N_CuCu2))
+        print("E_b = %.2f eV"%(E_b))        
         print("E = %.4f eV"%(E))        
         print ("Rate = %.3f\n"%(rate))   
-        
+        """
         # return the new rate value
         return rate
         
     def cutoff(self):
+        
         # cutoff value for types_before and types_after lattice points. 2.0 = two supercells.
         return 2.0

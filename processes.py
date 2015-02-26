@@ -2,7 +2,6 @@
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
 from KMCLib import *
-import math
 
 rate = 1.0
 
@@ -156,8 +155,9 @@ processes.append(KMCProcess(coordinates=coordinates8,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
                 
-# add second nearest neighbours in
-
+# add second nearest neighbours in.
+# not included as the barrier for second nearest neighbour is very large compared to nearest neighbours.
+"""
 processes.append(KMCProcess(coordinates=coordinates9,
                             elements_before=before_Va_Fe,
                             elements_after=after_Va_Fe,
@@ -241,8 +241,8 @@ processes.append(KMCProcess(coordinates=coordinates14,
                             move_vectors=None,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
-
-# Va --> Cu diffusion processes for both first and second neighbours
+"""
+# Va --> Cu diffusion processes for both first
 
 processes.append(KMCProcess(coordinates=coordinates1,
                             elements_before=before_Va_Cu,
@@ -358,6 +358,7 @@ processes.append(KMCProcess(coordinates=coordinates8,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
 
+"""
 processes.append(KMCProcess(coordinates=coordinates9,
                             elements_before=before_Va_Cu,
                             elements_after=after_Va_Cu,
@@ -442,7 +443,7 @@ processes.append(KMCProcess(coordinates=coordinates14,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
 
-
+"""
 
 # Construct the interactions object.
 interactions = KMCInteractions(processes=processes,

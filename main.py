@@ -3,8 +3,7 @@
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 
 from KMCLib import *
-from customRates_Va import *
-import numpy
+from customRates_VaCu import *
 
 # add configuration and interactions from files
 configuration = KMCConfigurationFromScript("config.py")
@@ -20,11 +19,11 @@ model = KMCLatticeModel(configuration=configuration,
                         interactions=interactions)
                                           
 # seed=None uses wall-clock time
-control_parameters = KMCControlParameters(number_of_steps=1000000,
-                                          dump_interval=5000,
+control_parameters = KMCControlParameters(number_of_steps=100000,
+                                          dump_interval=10000,
                                           seed=None)              
 
 # Run the model and save the atom poisitons to file
 model.run(control_parameters=control_parameters,
-          trajectory_filename="results/VaClustering1.py",
+          trajectory_filename="results/VaCu1.py",
           trajectory_type = 'lattice')
