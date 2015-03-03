@@ -141,7 +141,7 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         
         # calculate rate
         rate = v*math.exp(-E/kT)
-        
+        """
         print("----------------------- CHECK -----------------------")
         print("Iteration = %i"%(self._times_called))
         
@@ -170,7 +170,7 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         print("E_b = %f eV"%(E_b))        
         print("E = %.2f eV"%(E))        
         print ("Rate = %.1f\n"%(rate))   
-                    
+        """            
         return rate
         
     def cutoff(self):

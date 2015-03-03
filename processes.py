@@ -442,8 +442,8 @@ processes.append(KMCProcess(coordinates=coordinates14,
                             move_vectors=None,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
-
 """
+
 
 # Construct the interactions object.
 interactions = KMCInteractions(processes=processes,

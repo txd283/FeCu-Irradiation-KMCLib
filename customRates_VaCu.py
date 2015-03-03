@@ -5,14 +5,19 @@ from KMCLib import *
 from math import floor
 import numpy
 import math
+from timer import Timer
 
 # values required for vacancy diffusion, energy in eV, T in K, v is the jump atcounts in s^-1
 E_m_Fe = 0.65
+E_m_Fe_2 = 3.68
 E_m_Cu = 0.50
+E_m_Cu_2 = 0.50
 k = 0.862e-4
 T = 560
 v_Fe = 9.79e12
+v_Fe_2 = 5.176e12
 v_Cu = 7.16e12
+v_Cu_2 = 7.16e12
 kT = k*T
 
 # pair interaction values
@@ -72,7 +77,7 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         self._times_called = 0
 
     def rate(self, geometry, types_before, types_after, rate_constant, process_number, coordinate):
-     
+        #with Timer() as t:
         self._times_called += 1
                 
         # find the new position of the moved atom
@@ -265,7 +270,33 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         else:
             E = E_m_Cu + E_b
             rate = v_Cu*math.exp(-E/kT)
+
+        
         """
+        distance_sq = (geometry[new_position][0] - geometry[0][0] )**2 + (geometry[new_position][1] - geometry[0][1] )**2 + (geometry[new_position][2] - geometry[0][2] )**2
+        
+        print("Distance = %f"%(distance_sq))
+        
+        
+        if types_after[0] == '1' and distance_sq == 0.75: 
+            E = E_m_Fe_1 + E_b
+            rate = v_Fe_1*math.exp(-E/kT)
+            print("types_after[0] == '1' and distance_sq == 0.75:")
+        elif types_after[0] == '1' and distance_sq == 1.0:
+            E = E_m_Fe_2 + E_b
+            rate = v_Fe_2*math.exp(-E/kT)
+            print("types_after[0] == '1' and distance_sq == 1.0:")
+            
+        elif types_after[0] == '0.1' and distance_sq == 0.75:
+            E = E_m_Cu_1 + E_b
+            rate = v_Cu_1*math.exp(-E/kT)
+            print("types_after[0] == '0.1' and distance_sq == 0.75:")
+        elif types_after[0] == '0.1' and distance_sq == 1.0:
+            E = E_m_Cu_2 + E_b
+            rate = v_Cu_2*math.exp(-E/kT)
+            print("types_after[0] == '0.1' and distance_sq == 1.0:")
+            
+        
         # print out useful variables for diagnostics 
         print("----------------------- CHECK -----------------------")
         print("Iteration = %i"%(self._times_called))
@@ -284,8 +315,9 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         print("D_N_CuCu2 = %.0f\n"%(D_N_CuCu2))
         print("E_b = %.2f eV"%(E_b))        
         print("E = %.4f eV"%(E))        
-        print ("Rate = %.3f\n"%(rate))   
+        print ("Rate = %f\n"%(rate))   
         """
+        #print("CPU Time = %s s"%(t.secs))
         # return the new rate value
         return rate
         

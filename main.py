@@ -4,6 +4,7 @@
 
 from KMCLib import *
 from customRates_VaCu import *
+from timer import Timer
 
 # add configuration and interactions from files
 configuration = KMCConfigurationFromScript("config.py")
@@ -19,11 +20,15 @@ model = KMCLatticeModel(configuration=configuration,
                         interactions=interactions)
                                           
 # seed=None uses wall-clock time
-control_parameters = KMCControlParameters(number_of_steps=100000,
-                                          dump_interval=10000,
+control_parameters = KMCControlParameters(number_of_steps=0,
+                                          dump_interval=1,
                                           seed=None)              
 
 # Run the model and save the atom poisitons to file
-model.run(control_parameters=control_parameters,
-          trajectory_filename="results/VaCu1.py",
-          trajectory_type = 'lattice')
+with Timer() as t:
+    model.run(control_parameters=control_parameters,
+              trajectory_filename="results/test.py",
+              trajectory_type = 'lattice')
+print("Total CPU Time = %s s"%(t.secs))
+
+#print(CustomRateCalculator.initialize)

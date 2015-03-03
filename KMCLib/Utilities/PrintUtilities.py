@@ -43,6 +43,7 @@ def printHeader(output=None):
         output = sys.stdout
 
     # Write.
+    """
     prettyPrint("# -----------------------------------------------------------------------------", output)
     prettyPrint("# KMCLib version 1.1-b1", output)
     prettyPrint("# Distributed under the GPLv3 license", output)
@@ -59,3 +60,4 @@ def printHeader(output=None):
     prettyPrint("# (GPLv3) along with this program. If not, see <http://www.gnu.org/licenses/>.", output);
     prettyPrint("# -----------------------------------------------------------------------------", output)
     prettyPrint("", output)
+    """

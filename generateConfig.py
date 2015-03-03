@@ -6,12 +6,18 @@
 from KMCLib import *
 import numpy
 
-repititons = 50
+repititons = 5
 n = (repititons**3)*2
 
-vacancies = 250
+vacancies = 1
 copper = int(round(n*3e-3)) # ~0.3% copper in RPV steel
 
+print "from KMCLib import *"
+print("#--------------------------------------------------------------\n")
+print("# Number of vacancies (0) = %i"%(vacancies))
+print("# Number of Copper (0.1) = %i"%(copper))
+print("# Number of Iron (1) = %i\n"%(n - vacancies -copper))
+print("#--------------------------------------------------------------\n")
 # Define the unit cell.
 unit_cell = KMCUnitCell(cell_vectors=numpy.array([[2.87,0.0,0.0],
                                                   [0.0,2.87,0.0],
@@ -46,5 +52,4 @@ configuration = KMCConfiguration(lattice=lattice,
                                  possible_types=["0","1","0.1"])
 
 # Use the _script() function to get a script that can generate the configuration.
-print "from KMCLib import *"
 print configuration._script()
