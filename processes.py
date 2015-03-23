@@ -1,14 +1,20 @@
-# here the diffusion processes are described
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
+# here the diffusion processes are described -- only first neighbour hops are used
+# however second neighbour hops are commented out. Just uncomment them and they
+# should work
 
 from KMCLib import *
 
+import math
+
+# required to set up processes, however will be overridded with the customRateCalculator.py
 rate = 1.0
 
-#if diffusion is sucessful, swap the atoms
+#if diffusion is sucessful, swap vacacny (0) with Fe (1)
 before_Va_Fe = ['0', '1']
 after_Va_Fe = ['1', '0']
 
+#if diffusion is sucessful, swap vacacny (0) with Cu (0.1)
 before_Va_Cu = ['0', '0.1']
 after_Va_Cu = ['0.1', '0']
 
@@ -154,6 +160,7 @@ processes.append(KMCProcess(coordinates=coordinates8,
                             move_vectors=move_vector,
                             basis_sites=second_basis_sites,
                             rate_constant=rate))
+    
                 
 # add second nearest neighbours in.
 # not included as the barrier for second nearest neighbour is very large compared to nearest neighbours.

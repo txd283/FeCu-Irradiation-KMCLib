@@ -1,9 +1,9 @@
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
+# Added for dumping to CFG without converting the lattice.py dump -- it works
+# and can be used in the run.model, trajectory_type = 'cfg')
 
 import sys
 import time
-
-
 from KMCLib.Backend.Backend import MPICommons
 from KMCLib.Utilities.Trajectory.Trajectory import Trajectory
 

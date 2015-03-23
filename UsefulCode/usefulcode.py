@@ -1,3 +1,4 @@
+# Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
 # Used to calculate the nearest neighbours in a supercell of 2.0 cutoff in CustomRate
 """
   NN1 = numpy.zeros(shape=(15, 8))

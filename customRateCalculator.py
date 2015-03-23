@@ -1,23 +1,24 @@
 # Custom rate is calculated for unique events in the simulation
 # Author = Thomas Davis, email = txd283@bham.ac.uk / University of Birmingham
+# This rate calculator has a full implementation of the pair interaction method
+# for up to second nearest neighbours
+# Cu and Vacancies clustering works
+# Only first neighbour hops are included in the processes.py, and thus no code 
+# here has been incoperated for second neighbour hops
 
 from KMCLib import *
 from math import floor
 import numpy
 import math
-from timer import Timer
 
-# values required for vacancy diffusion, energy in eV, T in K, v is the jump atcounts in s^-1
-E_m_Fe = 0.65
-E_m_Fe_2 = 3.68
+# values required for vacancy diffusion, energy in eV, T in K, v is the jump in s^-1
+
+E_m_Fe = 0.722
 E_m_Cu = 0.50
-E_m_Cu_2 = 0.50
 k = 0.862e-4
-T = 560
+T = 563
 v_Fe = 9.79e12
-v_Fe_2 = 5.176e12
 v_Cu = 7.16e12
-v_Cu_2 = 7.16e12
 kT = k*T
 
 # pair interaction values
@@ -71,14 +72,15 @@ NN2 = [[  9,  10,  11,  12,  13,  14,],
  [  0,  23,  24,  25,  26,  64,]]
 
 class CustomRateCalculator(KMCRateCalculatorPlugin):
-        
-    def initialize(self):
+    
+   # uncomment if you want a counter for the number of times the fuction rate() is called -- for diagnositics.            
+   # def initialize(self):
         # used for calculating how many times rate fuction is called.
-        self._times_called = 0
+        #self._times_called = 0
 
     def rate(self, geometry, types_before, types_after, rate_constant, process_number, coordinate):
-        #with Timer() as t:
-        self._times_called += 1
+        # see above -- diagnositics
+        #self._times_called += 1
                 
         # find the new position of the moved atom
         for i in range(1,len(types_before)):
@@ -86,7 +88,7 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
                 new_position = i
                 break
         
-        # define variables
+        # define variables for the pair interaction. N_FeFe1_b is the number of Fe-Fe bonds before the move and 'a' stand for after the move.
         
         N_FeFe1_b = 0.0
         N_FeFe1_a = 0.0
@@ -135,13 +137,17 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         
         # find first neighbours of Va before move
         count = 0.0
+        # count the number of bonds at position 0 at all the possible nearest neighbours. Uses NN1 array.
         for i in range(8):
             count += float(types_before[int(NN1[0][i])])
+        # floor will reveal the number of  1st nearest neighbour Va-Fe bonds
         N_VaFe1_b = floor(count)
+        # will reveal the number of 1st nearest neighbour Va-Cu bonds
         N_VaCu1_b = (count - floor(count))*10.0
+        # remaining values will be  1st nearest neighbour Va-Va bonds
         N_VaVa1_b = abs(8.0 - N_VaFe1_b - N_VaCu1_b)
 
-        # find second neighbours of Va before move
+        # same method above, but now for 2nd nearest neighbours. uses NN2 array.
         count = 0.0
         for i in range(6):
             count += float(types_before[int(NN2[0][i])])
@@ -235,6 +241,7 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
             N_CuVa2_a = abs(6.0 - N_CuFe2_a - N_CuCu2_a)
         
         
+        # find the difference before and after the jump bonds.
         D_N_FeFe1 = N_FeFe1_a - N_FeFe1_b
         D_N_FeFe2 = N_FeFe2_a - N_FeFe2_b
         D_N_CuCu1 = N_CuCu1_a - N_CuCu1_b
@@ -270,14 +277,11 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         else:
             E = E_m_Cu + E_b
             rate = v_Cu*math.exp(-E/kT)
-
         
+        # commented out this code -- it is the implementation of second nearest neighbours hops. need to define new E_m and v_Fe/Cu values, as they are different for first and second neighbour hops.  
         """
-        distance_sq = (geometry[new_position][0] - geometry[0][0] )**2 + (geometry[new_position][1] - geometry[0][1] )**2 + (geometry[new_position][2] - geometry[0][2] )**2
-        
-        print("Distance = %f"%(distance_sq))
-        
-        
+        distance_sq = (geometry[new_position][0] - geometry[0][0] )**2 + (geometry[new_position][1] - geometry[0][1] )**2 + (geometry[new_position][2] - geometry[0][2] )**2        
+    
         if types_after[0] == '1' and distance_sq == 0.75: 
             E = E_m_Fe_1 + E_b
             rate = v_Fe_1*math.exp(-E/kT)
@@ -317,11 +321,10 @@ class CustomRateCalculator(KMCRateCalculatorPlugin):
         print("E = %.4f eV"%(E))        
         print ("Rate = %f\n"%(rate))   
         """
-        #print("CPU Time = %s s"%(t.secs))
+        
         # return the new rate value
         return rate
         
     def cutoff(self):
-        
         # cutoff value for types_before and types_after lattice points. 2.0 = two supercells.
         return 2.0

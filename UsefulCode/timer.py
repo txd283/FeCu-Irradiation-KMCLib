@@ -1,3 +1,5 @@
+# used to calculate the time it took for the customRateCalculator to do one iteration.
+
 import time
 
 class Timer(object):

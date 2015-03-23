@@ -6,11 +6,14 @@
 from KMCLib import *
 import numpy
 
-repititons = 5
+# here enter the repititons of the cell.
+repititons = 10
 n = (repititons**3)*2
 
+# here enter the number of vacancies and copper atoms you would like -- they will be dispersed randomly. Copper could be added with a set number based on the wt%, or override this with an integer value.
+
 vacancies = 1
-copper = int(round(n*3e-3)) # ~0.3% copper in RPV steel
+copper = int(round(n*5e-4)) # 0.05% copper in RPV steel
 
 print "from KMCLib import *"
 print("#--------------------------------------------------------------\n")
@@ -29,6 +32,7 @@ lattice = KMCLattice(unit_cell=unit_cell,
                      repetitions=(repititons,repititons,repititons),
                      periodic=(True,True,True))
 
+# Here Fe = 1, Vacancies = 0 and Cu = 0.1 for making the custom rate calculator efficient.
 types = ['1']*n
 
 # number of vacancies randomly distributed
