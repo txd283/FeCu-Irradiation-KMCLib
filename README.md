@@ -18,4 +18,4 @@ Planned by never implemented:
 - Nickel
 - Incorporate molecular dynamics damage cascades
 
-Open-source and under the MIT Licence. If you have any questions, please feel free to email me at txd283@bham.ac.uk
+Open-source and under the MIT Licence. If you have any questions, please feel free to email me at txd283@alumni.bham.ac.uk
